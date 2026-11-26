@@ -1,4 +1,5 @@
 export function LevelCard({
+  t,
   level,
   goal,
   totalDuration,
@@ -10,28 +11,26 @@ export function LevelCard({
 }) {
   if (isFinished) {
     return (
-      <section className="bottom-card bottom-card--congrats" aria-label="Goal completed">
+      <section className="bottom-card bottom-card--congrats" aria-label={t.goalReached}>
         <div key="congrats" className="bottom-card-content">
           <div className="congrats-head">
             <span className="congrats-trophy" aria-hidden="true">★</span>
             <div>
               <span className="bottom-level-badge bottom-level-badge--congrats">
-                Goal Reached · {totalDuration}
+                {t.goalReached} · {totalDuration}
               </span>
-              <h2 className="bottom-card-title congrats-title">Congratulations!</h2>
+              <h2 className="bottom-card-title congrats-title">{t.congratsTitle}</h2>
             </div>
           </div>
-          <p className="bottom-card-desc">
-            You&apos;ve completed all {total} levels of your <strong>{goal}</strong> map.
-          </p>
+          <p className="bottom-card-desc">{t.congratsDesc(total, goal)}</p>
         </div>
 
         <div className="bottom-card-actions">
           <button type="button" className="nav-btn nav-btn--ghost" onClick={onPrev}>
-            ← Back
+            {t.back}
           </button>
           <button type="button" className="nav-btn nav-btn--gold" onClick={onNext}>
-            Start Over ↺
+            {t.restart}
           </button>
         </div>
       </section>
@@ -41,11 +40,11 @@ export function LevelCard({
   if (!level) return null;
 
   return (
-    <section className="bottom-card" aria-label={`Level ${level.levelNumber} overview`}>
+    <section className="bottom-card" aria-label={t.levelOf(level.levelNumber, total)}>
       <div key={`${goal}-${level.levelNumber}`} className="bottom-card-content">
         <div className="bottom-card-meta">
           <span className="bottom-level-badge">
-            Level {level.levelNumber} of {total}
+            {t.levelOf(level.levelNumber, total)}
           </span>
           <span className="bottom-duration">{level.duration}</span>
         </div>
@@ -60,10 +59,10 @@ export function LevelCard({
           onClick={onPrev}
           disabled={index === 0}
         >
-          ← Back
+          {t.back}
         </button>
         <button type="button" className="nav-btn nav-btn--primary" onClick={onNext}>
-          {index === total - 1 ? 'Finish Goal ★' : 'Next Level →'}
+          {index === total - 1 ? t.finish : t.next}
         </button>
       </div>
     </section>

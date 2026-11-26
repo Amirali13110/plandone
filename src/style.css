@@ -15,7 +15,7 @@
 
 body {
   min-height: 100vh;
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Inter', 'Vazirmatn', system-ui, -apple-system, sans-serif;
   background:
     radial-gradient(circle at 20% 0%, rgba(16, 185, 129, 0.18), transparent 45%),
     radial-gradient(circle at 80% 10%, rgba(251, 191, 36, 0.1), transparent 40%),
@@ -25,21 +25,73 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+html[dir='rtl'] body {
+  font-family: 'Vazirmatn', system-ui, sans-serif;
+}
+
+html[dir='rtl'] .badge-text,
+html[dir='rtl'] .node-sign-kicker,
+html[dir='rtl'] .bottom-level-badge,
+html[dir='rtl'] .brand-name,
+html[dir='rtl'] .empty-title {
+  letter-spacing: 0;
+}
+
 .forest-app { max-width: 740px; margin: 0 auto; padding: 1rem 0.9rem 2rem; }
+.forest-app--map {
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.75rem 0.9rem max(0.75rem, env(safe-area-inset-bottom));
+  overflow: hidden;
+}
 
 /* Top HUD */
 .top-hud {
+  flex-shrink: 0;
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: 20px;
-  padding: 0.9rem 1.15rem;
+  padding: 0.8rem 1.05rem;
   backdrop-filter: blur(12px);
   margin-bottom: 1.25rem;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
 }
+.forest-app--map .top-hud,
+.forest-app--map .forest-error,
+.forest-app--map .forest-loading {
+  margin-bottom: 0;
+}
 
-.hud-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.9rem; }
-.hud-brand { display: flex; align-items: center; gap: 0.6rem; margin-right: auto; }
+.hud-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; }
+.hud-brand { display: flex; align-items: center; gap: 0.6rem; margin-inline-end: auto; }
+.hud-end { display: flex; align-items: center; gap: 0.55rem; }
+
+.lang-toggle {
+  display: inline-flex;
+  padding: 0.2rem;
+  border-radius: 10px;
+  background: rgba(5, 18, 14, 0.8);
+  border: 1px solid var(--border-strong);
+}
+
+.lang-btn {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.3rem 0.6rem;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+}
+
+.lang-btn:hover:not(:disabled) { color: var(--text); }
+.lang-btn.is-active { background: var(--emerald-deep); color: #052e16; }
+.lang-btn:disabled { opacity: 0.55; cursor: not-allowed; }
 
 .brand-leaf {
   width: 34px;
@@ -168,11 +220,18 @@ main.is-loading { opacity: 0.55; pointer-events: none; transition: opacity 0.25s
 .preset-pill:hover { color: var(--text); border-color: var(--border-strong); }
 
 /* Forest Map */
-.forest-stage {
+.map-viewport {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
   border-radius: 28px;
   border: 1px solid var(--border);
-  overflow: hidden;
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+  background: #0d241d;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(110, 231, 183, 0.3) transparent;
+}
+.forest-stage {
   background: #0d241d;
 }
 .forest-svg { display: block; width: 100%; height: auto; }
@@ -194,34 +253,57 @@ main.is-loading { opacity: 0.55; pointer-events: none; transition: opacity 0.25s
 .node-num { fill: #e2e8f0; font-size: 26px; font-weight: 800; pointer-events: none; }
 .level-node.is-active .node-num, .level-node.is-passed .node-num { fill: #052e16; }
 
-.node-card {
-  fill: rgba(9, 27, 21, 0.88);
-  stroke: rgba(110, 231, 183, 0.32);
-  stroke-width: 1.75;
-  transition: stroke 0.25s, fill 0.25s;
+.node-sign {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  padding: 0 14px;
+  border-radius: 15px;
+  background: rgba(9, 27, 21, 0.9);
+  border: 1.75px solid rgba(110, 231, 183, 0.32);
+  transition: border-color 0.25s, background 0.25s;
 }
-.level-node:hover .node-card, .level-node.is-active .node-card { stroke: var(--gold); fill: rgba(15, 42, 32, 0.96); }
-.node-card-kicker { fill: #6ee7b7; font-size: 11.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
-.level-node.is-active .node-card-kicker { fill: #fbbf24; }
-.node-card-title { fill: #ecfdf5; font-size: 16px; font-weight: 700; }
+.level-node:hover .node-sign, .level-node.is-active .node-sign {
+  border-color: var(--gold);
+  background: rgba(15, 42, 32, 0.96);
+}
+.node-sign-kicker {
+  color: #6ee7b7;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.level-node.is-active .node-sign-kicker { color: #fbbf24; }
+.node-sign-title {
+  color: #ecfdf5;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
-/* Sticky Bottom Card & Congratulations */
+/* Docked Bottom Card & Congratulations */
 .bottom-card {
-  position: sticky;
-  bottom: 1rem;
-  z-index: 10;
-  margin-top: 1.25rem;
+  flex-shrink: 0;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 1.1rem;
-  background: var(--panel);
-  border: 1px solid rgba(251, 191, 36, 0.4);
+  gap: 0.85rem;
+  background: rgba(9, 27, 21, 0.95);
+  border: 1px solid rgba(251, 191, 36, 0.45);
   border-radius: 20px;
-  padding: 1.15rem 1.35rem;
+  padding: 0.95rem 1.2rem;
   backdrop-filter: blur(16px);
-  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.52);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.5);
 }
 .bottom-card--congrats {
   background: linear-gradient(135deg, rgba(16, 48, 36, 0.96), rgba(30, 41, 24, 0.95));

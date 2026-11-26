@@ -65,10 +65,9 @@ function ForestDefs() {
   );
 }
 
-export function ForestMap({ plan, activeIndex, onSelectIndex }) {
+export function ForestMap({ plan, t, activeIndex, onSelectIndex }) {
   const layout = useMemo(() => buildForestLayout(plan.levels.length), [plan.levels.length]);
   const stopRefs = useRef([]);
-  const firstRender = useRef(true);
 
   const isFinished = activeIndex >= plan.levels.length;
   const totalSegments = plan.levels.length + 1;
@@ -77,14 +76,17 @@ export function ForestMap({ plan, activeIndex, onSelectIndex }) {
     ((isFinished ? totalSegments : activeIndex + 1) / totalSegments) * 100,
   );
 
-  // Smoothly scroll the active circle (or Goal) into view when advancing
+  // Scroll only the map viewport so the active circle centers cleanly above the bottom card
   useEffect(() => {
-    if (firstRender.current) {
-      firstRender.current = false;
-      return;
-    }
-    stopRefs.current[activeIndex]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }, [activeIndex, plan.goal]);
+    const el = stopRefs.current[activeIndex];
+    const viewport = el?.closest('.map-viewport');
+    if (!el || !viewport) return;
+    const elRect = el.getBoundingClientRect();
+    const vpRect = viewport.getBoundingClientRect();
+    const targetTop =
+      viewport.scrollTop + (elRect.top - vpRect.top) - vpRect.height / 2 + elRect.height / 2;
+    viewport.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
+  }, [activeIndex, plan]);
 
   const creekPath =
     `M -20 ${layout.height * 0.36} ` +
@@ -95,9 +97,10 @@ export function ForestMap({ plan, activeIndex, onSelectIndex }) {
     <div className="forest-stage">
       <svg
         className="forest-svg"
+        dir="ltr"
         viewBox={`0 0 ${layout.width} ${layout.height}`}
         role="img"
-        aria-label={`Forest map for ${plan.goal}`}
+        aria-label={plan.goal}
       >
         <ForestDefs />
 
@@ -134,7 +137,9 @@ export function ForestMap({ plan, activeIndex, onSelectIndex }) {
           <path className="campfire-flame" d="M 0 -5 C 6 1, 7 8, 0 12 C -7 8, -6 1, 0 -5 Z" fill="#fde047" />
           <g transform="translate(0, 62)">
             <rect x="-58" y="-16" width="116" height="32" rx="16" fill="#0d261e" stroke="#4ade80" strokeWidth="2" />
-            <text textAnchor="middle" y="5" className="badge-text badge-text--start">START</text>
+            <text textAnchor="middle" y="5" direction={t.dir} className="badge-text badge-text--start">
+              {t.start}
+            </text>
           </g>
         </g>
 
@@ -145,7 +150,7 @@ export function ForestMap({ plan, activeIndex, onSelectIndex }) {
           className={`goal-node ${isFinished ? 'is-finished' : ''}`}
           onClick={() => onSelectIndex(plan.levels.length)}
           role="button"
-          aria-label={`Goal: ${plan.goal}`}
+          aria-label={plan.goal}
         >
           <g className="node-circle-group">
             <circle r="56" fill="none" stroke="#fbbf24" strokeWidth="3" opacity={isFinished ? 0.95 : 0.6} className="beacon-ring" />
@@ -153,8 +158,10 @@ export function ForestMap({ plan, activeIndex, onSelectIndex }) {
             <path d="M -16 13 L -19 -9 L -5 1 L 0 -15 L 5 1 L 19 -9 L 16 13 Z" fill={isFinished ? '#052e16' : '#fbbf24'} />
           </g>
           <g transform="translate(0, -68)">
-            <rect x="-142" y="-18" width="284" height="36" rx="18" fill="#1b2e24" stroke="#fbbf24" strokeWidth="2" />
-            <text textAnchor="middle" y="6" className="badge-text badge-text--end">★ GOAL: {clip(plan.goal, 20)}</text>
+            <rect x="-148" y="-18" width="296" height="36" rx="18" fill="#1b2e24" stroke="#fbbf24" strokeWidth="2" />
+            <text textAnchor="middle" y="6" direction={t.dir} className="badge-text badge-text--end">
+              {t.goalPrefix} {clip(plan.goal, 20)}
+            </text>
           </g>
         </g>
 
@@ -166,8 +173,7 @@ export function ForestMap({ plan, activeIndex, onSelectIndex }) {
           const isActive = idx === activeIndex;
           const isPassed = idx < activeIndex;
           const onRight = point.x < layout.width / 2;
-          const labelX = onRight ? 58 : -308;
-          const textX = onRight ? 74 : -292;
+          const labelX = onRight ? 52 : -320;
 
           return (
             <g
@@ -177,7 +183,7 @@ export function ForestMap({ plan, activeIndex, onSelectIndex }) {
               className={`level-node ${isActive ? 'is-active' : ''} ${isPassed ? 'is-passed' : ''}`}
               onClick={() => onSelectIndex(idx)}
               role="button"
-              aria-label={`Level ${level.levelNumber}: ${level.title}`}
+              aria-label={`${t.levelPrefix} ${level.levelNumber}: ${level.title}`}
             >
               <g className="node-circle-group">
                 {isActive && <circle r="50" fill="none" stroke="#fbbf24" strokeWidth="3.5" className="beacon-ring" />}
@@ -192,9 +198,14 @@ export function ForestMap({ plan, activeIndex, onSelectIndex }) {
                 />
                 <text textAnchor="middle" y="9" className="node-num">{level.levelNumber}</text>
               </g>
-              <rect x={labelX} y="-30" width="250" height="60" rx="15" className="node-card" />
-              <text x={textX} y="-6" className="node-card-kicker">LEVEL {level.levelNumber} · {level.duration}</text>
-              <text x={textX} y="17" className="node-card-title">{clip(level.title, 21)}</text>
+              <foreignObject x={labelX} y="-34" width="268" height="68">
+                <div className="node-sign" dir={t.dir}>
+                  <span className="node-sign-kicker">
+                    {t.levelPrefix} {level.levelNumber} · {level.duration}
+                  </span>
+                  <strong className="node-sign-title">{level.title}</strong>
+                </div>
+              </foreignObject>
             </g>
           );
         })}

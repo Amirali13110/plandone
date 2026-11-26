@@ -10,7 +10,7 @@ export function MapIcon({ size = 18 }) {
   );
 }
 
-export function TopBar({ totalDuration, isLoading, onSubmitGoal }) {
+export function TopBar({ lang, t, totalDuration, isLoading, onChangeLang, onSubmitGoal }) {
   const [goalText, setGoalText] = useState('');
 
   function handleSubmit(e) {
@@ -30,7 +30,7 @@ export function TopBar({ totalDuration, isLoading, onSubmitGoal }) {
           </span>
           <div>
             <span className="brand-name">Plandone</span>
-            <span className="brand-tag">Visual Plan Map</span>
+            <span className="brand-tag">{t.brandTag}</span>
           </div>
         </div>
 
@@ -38,18 +38,39 @@ export function TopBar({ totalDuration, isLoading, onSubmitGoal }) {
           <input
             type="text"
             className="quest-input"
-            placeholder="What plan do you want to visualize? (e.g. Start bodybuilding)"
+            placeholder={t.placeholder}
             value={goalText}
             onChange={(e) => setGoalText(e.target.value)}
             disabled={isLoading}
-            aria-label="Enter your plan"
+            aria-label={t.inputLabel}
           />
           <button type="submit" className="quest-btn" disabled={isLoading}>
-            {isLoading ? 'Mapping…' : 'Visualize'}
+            {isLoading ? t.mapping : t.visualize}
           </button>
         </form>
 
-        {totalDuration && <span className="hud-duration">{totalDuration}</span>}
+        <div className="hud-end">
+          {totalDuration && <span className="hud-duration">{totalDuration}</span>}
+
+          <div className="lang-toggle" role="group" aria-label="Language">
+            <button
+              type="button"
+              className={`lang-btn ${lang === 'en' ? 'is-active' : ''}`}
+              onClick={() => onChangeLang('en')}
+              disabled={isLoading}
+            >
+              EN
+            </button>
+            <button
+              type="button"
+              className={`lang-btn ${lang === 'fa' ? 'is-active' : ''}`}
+              onClick={() => onChangeLang('fa')}
+              disabled={isLoading}
+            >
+              فا
+            </button>
+          </div>
+        </div>
       </div>
     </header>
   );

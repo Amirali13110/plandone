@@ -1,32 +1,43 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ForestMap } from './components/ForestMap';
 import { LevelCard } from './components/LevelCard';
 import { MapIcon, TopBar } from './components/TopBar';
 import { generatePlan } from './services/planService';
-
-const QUICK_IDEAS = ['Start bodybuilding', 'Become a programmer', 'Learn guitar'];
+import { TRANSLATIONS } from './utils/i18n';
 
 export default function App() {
+  const [lang, setLang] = useState('en');
   const [plan, setPlan] = useState(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  const t = TRANSLATIONS[lang];
   const isFinished = plan !== null && activeIndex >= plan.levels.length;
   const activeLevel = plan && !isFinished ? (plan.levels[activeIndex] ?? null) : null;
+
+  useEffect(() => {
+    document.documentElement.lang = lang;
+    document.documentElement.dir = t.dir;
+  }, [lang, t.dir]);
 
   async function handleSubmitGoal(goal) {
     setIsLoading(true);
     setError(null);
     try {
-      const nextPlan = await generatePlan(goal);
+      const nextPlan = await generatePlan(goal, lang);
       setPlan(nextPlan);
       setActiveIndex(0);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to generate plan.');
+      setError(err instanceof Error ? err.message : t.errors.generic);
     } finally {
       setIsLoading(false);
     }
+  }
+
+  function handleChangeLang(nextLang) {
+    setLang(nextLang);
+    setError(null);
   }
 
   function handlePrev() {
@@ -39,10 +50,13 @@ export default function App() {
   }
 
   return (
-    <div className="forest-app">
+    <div className={`forest-app ${plan ? 'forest-app--map' : ''}`}>
       <TopBar
+        lang={lang}
+        t={t}
         totalDuration={plan?.totalDuration}
         isLoading={isLoading}
+        onChangeLang={handleChangeLang}
         onSubmitGoal={handleSubmitGoal}
       />
 
@@ -51,21 +65,23 @@ export default function App() {
       {isLoading && (
         <div className="forest-loading" role="status" aria-live="polite">
           <span className="loading-dot" aria-hidden="true" />
-          Charting your custom forest map…
+          {t.loading}
         </div>
       )}
 
       {plan ? (
         <>
-          <main className={isLoading ? 'is-loading' : ''}>
+          <main className={`map-viewport ${isLoading ? 'is-loading' : ''}`}>
             <ForestMap
               plan={plan}
+              t={t}
               activeIndex={activeIndex}
               onSelectIndex={setActiveIndex}
             />
           </main>
 
           <LevelCard
+            t={t}
             level={activeLevel}
             goal={plan.goal}
             totalDuration={plan.totalDuration}
@@ -77,16 +93,14 @@ export default function App() {
           />
         </>
       ) : (
-        <section className="empty-forest" aria-label="Get started">
+        <section className="empty-forest" aria-label={t.emptyTitle}>
           <div className="empty-icon" aria-hidden="true">
             <MapIcon size={32} />
           </div>
-          <h1 className="empty-title">Visualize any plan as a forest map</h1>
-          <p className="empty-desc">
-            Type your goal above—or try one of these—to generate a live step-by-step route.
-          </p>
+          <h1 className="empty-title">{t.emptyTitle}</h1>
+          <p className="empty-desc">{t.emptyDesc}</p>
           <div className="empty-ideas">
-            {QUICK_IDEAS.map((idea) => (
+            {t.quickIdeas.map((idea) => (
               <button
                 key={idea}
                 type="button"
