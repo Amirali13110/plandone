@@ -22,8 +22,8 @@ export const TRANSLATIONS = {
     congratsTitle: 'Congratulations!',
     congratsDesc: (total, goal) => `You've completed all ${total} levels of your "${goal}" map.`,
     errors: {
-      missingKey: 'Missing VITE_GROQ_API_KEY in your .env file.',
-      invalidKey: 'Invalid Groq API key. Check VITE_GROQ_API_KEY in .env.',
+      missingKey: 'Missing GROQ_API_KEY on the server. Add it in Netlify env settings (or .env locally).',
+      invalidKey: 'Invalid Groq API key. Check GROQ_API_KEY in your environment settings.',
       rateLimit: 'Too many requests. Wait a few seconds and try again.',
       restricted: 'This goal may involve restricted or illegal activity. Try a lawful goal instead.',
       unablePrefix: 'Unable to map this goal:',
@@ -63,8 +63,8 @@ export const TRANSLATIONS = {
     congratsTitle: 'تبریک می‌گم!',
     congratsDesc: (total, goal) => `هر ${total} مرحله از نقشه «${goal}» رو کامل کردی.`,
     errors: {
-      missingKey: 'کلید VITE_GROQ_API_KEY در فایل .env تنظیم نشده است.',
-      invalidKey: 'کلید Groq نامعتبر است. VITE_GROQ_API_KEY را در .env بررسی کن.',
+      missingKey: 'کلید GROQ_API_KEY روی سرور تنظیم نشده است. آن را در تنظیمات Netlify (یا فایل .env) اضافه کن.',
+      invalidKey: 'کلید Groq نامعتبر است. GROQ_API_KEY را در تنظیمات بررسی کن.',
       rateLimit: 'تعداد درخواست‌ها زیاد شده. چند ثانیه صبر کن و دوباره امتحان کن.',
       restricted: 'این هدف ممکن است غیرقانونی یا محدود باشد. یک هدف مجاز امتحان کن.',
       unablePrefix: 'امکان ساخت نقشه نیست:',

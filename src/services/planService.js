@@ -1,8 +1,4 @@
 import { TRANSLATIONS } from '../utils/i18n';
-import { buildPlanSystemPrompt, buildPlanUserPrompt } from './planPrompt';
-
-const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
-const GROQ_MODEL = 'openai/gpt-oss-120b';
 
 function readText(value, fallback) {
   return typeof value === 'string' && value.trim() ? value.trim() : fallback;
@@ -35,6 +31,7 @@ function parsePlan(rawText, fallbackGoal, t) {
 }
 
 function getHttpError(status, body, t) {
+  if (body?.code === 'MISSING_KEY') return t.errors.missingKey;
   if (status === 401) return t.errors.invalidKey;
   if (status === 429) return t.errors.rateLimit;
   if (status === 400) {
@@ -49,27 +46,11 @@ function getHttpError(status, body, t) {
 
 export async function generatePlan(goal, lang = 'en') {
   const t = TRANSLATIONS[lang] ?? TRANSLATIONS.en;
-  const apiKey = import.meta.env.VITE_GROQ_API_KEY?.trim();
 
-  if (!apiKey) {
-    throw new Error(t.errors.missingKey);
-  }
-
-  const res = await fetch(GROQ_URL, {
+  const res = await fetch('/api/plan', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey}`,
-    },
-    body: JSON.stringify({
-      model: GROQ_MODEL,
-      temperature: 0.7,
-      response_format: { type: 'json_object' },
-      messages: [
-        { role: 'system', content: buildPlanSystemPrompt(lang) },
-        { role: 'user', content: buildPlanUserPrompt(goal, lang) },
-      ],
-    }),
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ goal, lang }),
   });
 
   const body = await res.json().catch(() => null);
@@ -77,10 +58,9 @@ export async function generatePlan(goal, lang = 'en') {
     throw new Error(getHttpError(res.status, body, t));
   }
 
-  const content = body?.choices?.[0]?.message?.content;
-  if (!content) {
+  if (!body?.content) {
     throw new Error(t.errors.emptyResponse);
   }
 
-  return parsePlan(content, goal, t);
+  return parsePlan(body.content, goal, t);
 }
