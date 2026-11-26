@@ -73,15 +73,6 @@ export default function App() {
 
       {plan ? (
         <>
-          <main className={`map-viewport ${isLoading ? 'is-loading' : ''}`}>
-            <ForestMap
-              plan={plan}
-              t={t}
-              activeIndex={activeIndex}
-              onSelectIndex={setActiveIndex}
-            />
-          </main>
-
           <LevelCard
             t={t}
             level={activeLevel}
@@ -95,6 +86,15 @@ export default function App() {
             onNext={handleNext}
             onPlanAgain={() => handleSubmitGoal(lastGoal || plan.goal)}
           />
+
+          <main className={`map-viewport ${isLoading ? 'is-loading' : ''}`}>
+            <ForestMap
+              plan={plan}
+              t={t}
+              activeIndex={activeIndex}
+              onSelectIndex={setActiveIndex}
+            />
+          </main>
         </>
       ) : (
         <section className="empty-forest" aria-label={t.emptyTitle}>
