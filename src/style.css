@@ -1,0 +1,304 @@
+:root {
+  --bg: #071510;
+  --panel: rgba(11, 31, 24, 0.9);
+  --border: rgba(110, 231, 183, 0.18);
+  --border-strong: rgba(110, 231, 183, 0.36);
+  --text: #ecfdf5;
+  --text-muted: #93b8a8;
+  --emerald: #34d399;
+  --emerald-deep: #10b981;
+  --gold: #fbbf24;
+  --gold-soft: rgba(251, 191, 36, 0.16);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  min-height: 100vh;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(16, 185, 129, 0.18), transparent 45%),
+    radial-gradient(circle at 80% 10%, rgba(251, 191, 36, 0.1), transparent 40%),
+    var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+.forest-app { max-width: 740px; margin: 0 auto; padding: 1rem 0.9rem 2rem; }
+
+/* Top HUD */
+.top-hud {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 0.9rem 1.15rem;
+  backdrop-filter: blur(12px);
+  margin-bottom: 1.25rem;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+}
+
+.hud-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.9rem; }
+.hud-brand { display: flex; align-items: center; gap: 0.6rem; margin-right: auto; }
+
+.brand-leaf {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--emerald-deep), var(--gold));
+  color: #052e16;
+  box-shadow: 0 0 16px rgba(52, 211, 153, 0.35);
+}
+
+.brand-name { display: block; font-weight: 700; font-size: 1rem; letter-spacing: -0.01em; line-height: 1.1; }
+.brand-tag { display: block; font-size: 0.72rem; color: var(--text-muted); }
+
+.quest-form {
+  flex: 1 1 320px;
+  display: flex;
+  gap: 0.4rem;
+  background: rgba(5, 18, 14, 0.75);
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  padding: 0.28rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.quest-form:focus-within { border-color: var(--emerald); box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.16); }
+
+.quest-input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font: inherit;
+  font-size: 0.9rem;
+  padding: 0.48rem 0.75rem;
+}
+.quest-input::placeholder { color: var(--text-muted); }
+
+.quest-btn {
+  border: none;
+  border-radius: 9px;
+  padding: 0.5rem 1.05rem;
+  background: linear-gradient(135deg, var(--emerald-deep), #059669);
+  color: #042016;
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 0.15s, filter 0.15s;
+}
+.quest-btn:hover { filter: brightness(1.1); }
+.quest-btn:active { transform: scale(0.97); }
+.quest-btn:disabled, .preset-pill:disabled { opacity: 0.55; cursor: not-allowed; }
+
+.hud-duration {
+  font-size: 0.78rem;
+  color: var(--gold);
+  font-weight: 700;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  background: var(--gold-soft);
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  white-space: nowrap;
+}
+
+/* Status & Empty State */
+.forest-error, .forest-loading {
+  margin-bottom: 1rem;
+  padding: 0.7rem 1rem;
+  border-radius: 12px;
+  font-size: 0.88rem;
+  text-align: center;
+}
+.forest-error { background: rgba(239, 68, 68, 0.14); border: 1px solid rgba(248, 113, 113, 0.45); color: #fecaca; }
+.forest-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  background: rgba(16, 185, 129, 0.14);
+  border: 1px solid rgba(52, 211, 153, 0.38);
+  color: #a7f3d0;
+  font-weight: 600;
+}
+
+.loading-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--gold); animation: beaconPulse 1.1s ease-out infinite; }
+main.is-loading { opacity: 0.55; pointer-events: none; transition: opacity 0.25s ease; }
+
+.empty-forest {
+  text-align: center;
+  padding: 4.5rem 1.5rem;
+  border-radius: 28px;
+  border: 1px solid var(--border);
+  background: radial-gradient(circle at 50% 20%, rgba(52, 211, 153, 0.14), transparent 55%), #0d241d;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
+}
+.empty-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 1.25rem;
+  border-radius: 20px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, var(--emerald-deep), var(--gold));
+  color: #052e16;
+  box-shadow: 0 0 28px rgba(52, 211, 153, 0.35);
+}
+.empty-title { font-size: clamp(1.4rem, 3.5vw, 1.9rem); font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.5rem; }
+.empty-desc { color: var(--text-muted); font-size: 0.95rem; max-width: 440px; margin: 0 auto 1.5rem; }
+.empty-ideas { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.55rem; }
+
+.preset-pill {
+  border: 1px solid var(--border);
+  background: rgba(7, 21, 16, 0.65);
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 0.82rem;
+  padding: 0.34rem 0.9rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s;
+}
+.preset-pill:hover { color: var(--text); border-color: var(--border-strong); }
+
+/* Forest Map */
+.forest-stage {
+  border-radius: 28px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+  background: #0d241d;
+}
+.forest-svg { display: block; width: 100%; height: auto; }
+
+.badge-text { font-size: 13.5px; font-weight: 800; letter-spacing: 0.08em; }
+.badge-text--start { fill: #86efac; }
+.badge-text--end { fill: #fde68a; }
+.trail-progress { transition: stroke-dashoffset 0.75s cubic-bezier(0.22, 1, 0.36, 1); }
+
+.level-node, .goal-node { cursor: pointer; outline: none; }
+.node-circle-group {
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.level-node:hover .node-circle-group { transform: scale(1.08); }
+.level-node.is-active .node-circle-group, .goal-node.is-finished .node-circle-group { transform: scale(1.22); }
+
+.node-num { fill: #e2e8f0; font-size: 26px; font-weight: 800; pointer-events: none; }
+.level-node.is-active .node-num, .level-node.is-passed .node-num { fill: #052e16; }
+
+.node-card {
+  fill: rgba(9, 27, 21, 0.88);
+  stroke: rgba(110, 231, 183, 0.32);
+  stroke-width: 1.75;
+  transition: stroke 0.25s, fill 0.25s;
+}
+.level-node:hover .node-card, .level-node.is-active .node-card { stroke: var(--gold); fill: rgba(15, 42, 32, 0.96); }
+.node-card-kicker { fill: #6ee7b7; font-size: 11.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; }
+.level-node.is-active .node-card-kicker { fill: #fbbf24; }
+.node-card-title { fill: #ecfdf5; font-size: 16px; font-weight: 700; }
+
+/* Sticky Bottom Card & Congratulations */
+.bottom-card {
+  position: sticky;
+  bottom: 1rem;
+  z-index: 10;
+  margin-top: 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.1rem;
+  background: var(--panel);
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  border-radius: 20px;
+  padding: 1.15rem 1.35rem;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.52);
+}
+.bottom-card--congrats {
+  background: linear-gradient(135deg, rgba(16, 48, 36, 0.96), rgba(30, 41, 24, 0.95));
+  border-color: rgba(251, 191, 36, 0.72);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.55), 0 0 28px rgba(251, 191, 36, 0.2);
+}
+.bottom-card-content { flex: 1 1 320px; animation: cardFadeIn 0.28s cubic-bezier(0.22, 1, 0.36, 1); }
+.bottom-card-meta { display: flex; align-items: center; gap: 0.55rem; margin-bottom: 0.3rem; }
+.bottom-level-badge {
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  background: var(--gold-soft);
+  color: var(--gold);
+  border: 1px solid rgba(251, 191, 36, 0.35);
+}
+.bottom-level-badge--congrats {
+  display: inline-block;
+  margin-bottom: 0.15rem;
+  background: rgba(52, 211, 153, 0.2);
+  color: #86efac;
+  border-color: rgba(52, 211, 153, 0.45);
+}
+.bottom-duration { font-size: 0.78rem; color: var(--text-muted); }
+.bottom-card-title { font-size: 1.18rem; font-weight: 700; margin-bottom: 0.2rem; }
+.bottom-card-desc { font-size: 0.9rem; color: var(--text-muted); }
+.bottom-card-actions { display: flex; align-items: center; gap: 0.55rem; }
+
+.congrats-head { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.45rem; }
+.congrats-trophy {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #fde047, #f59e0b);
+  color: #1c1917;
+  font-size: 1.35rem;
+  font-weight: 800;
+  box-shadow: 0 0 20px rgba(251, 191, 36, 0.45);
+  animation: trophyPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.congrats-title { color: #fef08a; margin-bottom: 0; }
+
+.nav-btn {
+  border-radius: 12px;
+  padding: 0.65rem 1.15rem;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 0.15s, filter 0.15s, border-color 0.15s;
+}
+.nav-btn--ghost { background: rgba(7, 21, 16, 0.7); border: 1px solid var(--border); color: var(--text); }
+.nav-btn--ghost:hover:not(:disabled) { border-color: var(--border-strong); }
+.nav-btn--ghost:disabled { opacity: 0.35; cursor: not-allowed; }
+.nav-btn--primary { border: none; background: linear-gradient(135deg, var(--emerald-deep), var(--gold)); color: #052e16; box-shadow: 0 4px 18px rgba(52, 211, 153, 0.25); }
+.nav-btn--gold { border: none; background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #1c1917; box-shadow: 0 4px 20px rgba(251, 191, 36, 0.35); }
+.nav-btn--primary:hover, .nav-btn--gold:hover { filter: brightness(1.08); }
+.nav-btn:active:not(:disabled) { transform: scale(0.97); }
+
+/* Animations */
+.forest-tree, .campfire-flame { transform-box: fill-box; transform-origin: bottom center; }
+.forest-tree { animation: treeSway 6s ease-in-out infinite; }
+.campfire-flame { animation: flameFlicker 1.2s ease-in-out infinite alternate; }
+.river-shimmer { animation: riverFlow 4.5s linear infinite; }
+.beacon-ring { transform-box: fill-box; transform-origin: center; animation: beaconPulse 2.2s ease-out infinite; }
+.firefly { animation: fireflyFloat 5s ease-in-out infinite; }
+
+@keyframes cardFadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes trophyPop { 0% { transform: scale(0.5) rotate(-14deg); opacity: 0; } 100% { transform: scale(1) rotate(0deg); opacity: 1; } }
+@keyframes treeSway { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(1.6deg); } }
+@keyframes flameFlicker { 0% { transform: scaleY(0.94) scaleX(1.03); opacity: 0.9; } 100% { transform: scaleY(1.08) scaleX(0.95); opacity: 1; } }
+@keyframes riverFlow { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -42; } }
+@keyframes beaconPulse { 0% { transform: scale(0.88); opacity: 0.85; } 100% { transform: scale(1.42); opacity: 0; } }
+@keyframes fireflyFloat { 0%, 100% { opacity: 0.15; transform: translate(0, 0); } 50% { opacity: 0.92; transform: translate(10px, -14px); } }
