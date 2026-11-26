@@ -111,19 +111,24 @@ html[dir='rtl'] .empty-title {
 .brand-tag { display: block; font-size: 0.72rem; color: var(--text-muted); }
 
 .quest-form {
-  flex: 1 1 320px;
+  flex: 1 1 280px;
+  min-width: 0;
+  max-width: 100%;
   display: flex;
+  align-items: center;
   gap: 0.4rem;
   background: rgba(5, 18, 14, 0.75);
   border: 1px solid var(--border-strong);
   border-radius: 12px;
   padding: 0.28rem;
+  overflow: hidden;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 .quest-form:focus-within { border-color: var(--emerald); box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.16); }
 
 .quest-input {
-  flex: 1;
+  flex: 1 1 0;
+  width: 0;
   min-width: 0;
   background: transparent;
   border: none;
@@ -136,6 +141,7 @@ html[dir='rtl'] .empty-title {
 .quest-input::placeholder { color: var(--text-muted); }
 
 .quest-btn {
+  flex-shrink: 0;
   border: none;
   border-radius: 9px;
   padding: 0.5rem 1.05rem;
@@ -406,7 +412,7 @@ main.is-loading { opacity: 0.55; pointer-events: none; transition: opacity 0.25s
   .hud-row { gap: 0.55rem; }
   .hud-brand { order: 1; gap: 0.5rem; }
   .hud-end { order: 2; gap: 0.4rem; }
-  .quest-form { order: 3; flex: 1 0 100%; }
+  .quest-form { order: 3; flex: 1 1 100%; width: 100%; }
 
   .brand-leaf { width: 30px; height: 30px; border-radius: 8px; }
   .brand-name { font-size: 0.92rem; }
