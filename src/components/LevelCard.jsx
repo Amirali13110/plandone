@@ -6,8 +6,10 @@ export function LevelCard({
   index,
   total,
   isFinished,
+  isLoading,
   onPrev,
   onNext,
+  onPlanAgain,
 }) {
   if (isFinished) {
     return (
@@ -26,11 +28,11 @@ export function LevelCard({
         </div>
 
         <div className="bottom-card-actions">
-          <button type="button" className="nav-btn nav-btn--ghost" onClick={onPrev}>
+          <button type="button" className="nav-btn nav-btn--ghost" onClick={onPrev} disabled={isLoading}>
             {t.back}
           </button>
-          <button type="button" className="nav-btn nav-btn--gold" onClick={onNext}>
-            {t.restart}
+          <button type="button" className="nav-btn nav-btn--gold" onClick={onPlanAgain} disabled={isLoading}>
+            {isLoading ? t.mapping : t.planAgain}
           </button>
         </div>
       </section>

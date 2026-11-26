@@ -8,6 +8,7 @@ import { TRANSLATIONS } from './utils/i18n';
 export default function App() {
   const [lang, setLang] = useState('en');
   const [plan, setPlan] = useState(null);
+  const [lastGoal, setLastGoal] = useState('');
   const [activeIndex, setActiveIndex] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -22,6 +23,7 @@ export default function App() {
   }, [lang, t.dir]);
 
   async function handleSubmitGoal(goal) {
+    setLastGoal(goal);
     setIsLoading(true);
     setError(null);
     try {
@@ -88,8 +90,10 @@ export default function App() {
             index={activeIndex}
             total={plan.levels.length}
             isFinished={isFinished}
+            isLoading={isLoading}
             onPrev={handlePrev}
             onNext={handleNext}
+            onPlanAgain={() => handleSubmitGoal(lastGoal || plan.goal)}
           />
         </>
       ) : (

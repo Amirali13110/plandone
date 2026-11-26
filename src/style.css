@@ -367,7 +367,7 @@ main.is-loading { opacity: 0.55; pointer-events: none; transition: opacity 0.25s
 }
 .nav-btn--ghost { background: rgba(7, 21, 16, 0.7); border: 1px solid var(--border); color: var(--text); }
 .nav-btn--ghost:hover:not(:disabled) { border-color: var(--border-strong); }
-.nav-btn--ghost:disabled { opacity: 0.35; cursor: not-allowed; }
+.nav-btn:disabled { opacity: 0.45; cursor: not-allowed; }
 .nav-btn--primary { border: none; background: linear-gradient(135deg, var(--emerald-deep), var(--gold)); color: #052e16; box-shadow: 0 4px 18px rgba(52, 211, 153, 0.25); }
 .nav-btn--gold { border: none; background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #1c1917; box-shadow: 0 4px 20px rgba(251, 191, 36, 0.35); }
 .nav-btn--primary:hover, .nav-btn--gold:hover { filter: brightness(1.08); }
