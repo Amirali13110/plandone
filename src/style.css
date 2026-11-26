@@ -13,8 +13,10 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+html, body { overflow-x: hidden; }
+
 body {
-  min-height: 100vh;
+  min-height: 100dvh;
   font-family: 'Inter', 'Vazirmatn', system-ui, -apple-system, sans-serif;
   background:
     radial-gradient(circle at 20% 0%, rgba(16, 185, 129, 0.18), transparent 45%),
@@ -23,6 +25,7 @@ body {
   color: var(--text);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
 }
 
 html[dir='rtl'] body {
@@ -254,6 +257,7 @@ main.is-loading { opacity: 0.55; pointer-events: none; transition: opacity 0.25s
 .level-node.is-active .node-num, .level-node.is-passed .node-num { fill: #052e16; }
 
 .node-sign {
+  width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -384,3 +388,60 @@ main.is-loading { opacity: 0.55; pointer-events: none; transition: opacity 0.25s
 @keyframes riverFlow { from { stroke-dashoffset: 0; } to { stroke-dashoffset: -42; } }
 @keyframes beaconPulse { 0% { transform: scale(0.88); opacity: 0.85; } 100% { transform: scale(1.42); opacity: 0; } }
 @keyframes fireflyFloat { 0%, 100% { opacity: 0.15; transform: translate(0, 0); } 50% { opacity: 0.92; transform: translate(10px, -14px); } }
+
+/* Mobile & Small Screens */
+@media (max-width: 640px) {
+  .forest-app { padding: 0.65rem 0.65rem 1.5rem; }
+  .forest-app--map {
+    gap: 0.5rem;
+    padding: 0.5rem 0.55rem max(0.5rem, env(safe-area-inset-bottom));
+  }
+
+  .top-hud {
+    padding: 0.65rem 0.75rem;
+    border-radius: 16px;
+    margin-bottom: 0.85rem;
+  }
+
+  .hud-row { gap: 0.55rem; }
+  .hud-brand { order: 1; gap: 0.5rem; }
+  .hud-end { order: 2; gap: 0.4rem; }
+  .quest-form { order: 3; flex: 1 0 100%; }
+
+  .brand-leaf { width: 30px; height: 30px; border-radius: 8px; }
+  .brand-name { font-size: 0.92rem; }
+  .brand-tag { font-size: 0.68rem; }
+  .hud-duration { font-size: 0.72rem; padding: 0.28rem 0.6rem; }
+  .lang-btn { font-size: 0.74rem; padding: 0.26rem 0.5rem; }
+
+  .quest-input { font-size: 16px; padding: 0.45rem 0.65rem; }
+  .quest-btn { font-size: 0.84rem; padding: 0.48rem 0.9rem; }
+
+  .empty-forest { padding: 2.5rem 1.1rem; border-radius: 20px; }
+  .empty-icon { width: 52px; height: 52px; border-radius: 16px; margin-bottom: 1rem; }
+  .empty-title { font-size: 1.3rem; }
+  .empty-desc { font-size: 0.88rem; margin-bottom: 1.2rem; }
+
+  .map-viewport { border-radius: 20px; -webkit-overflow-scrolling: touch; }
+
+  .bottom-card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.65rem;
+    padding: 0.8rem 0.9rem;
+    border-radius: 16px;
+  }
+  .bottom-card-content { flex: initial; }
+  .bottom-card-meta { gap: 0.45rem; margin-bottom: 0.22rem; }
+  .bottom-level-badge { font-size: 0.7rem; padding: 0.16rem 0.55rem; }
+  .bottom-duration { font-size: 0.74rem; }
+  .bottom-card-title { font-size: 1.02rem; margin-bottom: 0.15rem; }
+  .bottom-card-desc { font-size: 0.84rem; line-height: 1.45; }
+
+  .bottom-card-actions { width: 100%; gap: 0.5rem; }
+  .nav-btn { padding: 0.62rem 0.9rem; font-size: 0.85rem; }
+  .nav-btn--primary, .nav-btn--gold { flex: 1; text-align: center; }
+
+  .congrats-head { gap: 0.65rem; margin-bottom: 0.3rem; }
+  .congrats-trophy { width: 38px; height: 38px; border-radius: 12px; font-size: 1.15rem; }
+}

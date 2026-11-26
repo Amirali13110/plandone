@@ -2,7 +2,7 @@ export const TRANSLATIONS = {
   en: {
     dir: 'ltr',
     brandTag: 'Visual Plan Map',
-    placeholder: 'What plan do you want to visualize? (e.g. Start bodybuilding)',
+    placeholder: 'Your goal (e.g. Start bodybuilding)',
     inputLabel: 'Enter your plan',
     visualize: 'Visualize',
     mapping: 'Mapping…',
@@ -43,7 +43,7 @@ export const TRANSLATIONS = {
   fa: {
     dir: 'rtl',
     brandTag: 'نقشه تصویری هدف',
-    placeholder: 'چه برنامه‌ای می‌خوای به نقشه تبدیل کنی؟ (مثلاً شروع بدنسازی)',
+    placeholder: 'هدفت رو بنویس (مثلاً شروع بدنسازی)',
     inputLabel: 'هدفت را وارد کن',
     visualize: 'بساز',
     mapping: 'در حال ساخت…',
